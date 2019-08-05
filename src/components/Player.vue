@@ -1,4 +1,5 @@
 <template>
+  <!-- プレーヤー側コンポーネント -->
   <div class="player">
     <div class="field">
       <card v-for="(card, index) in hand"
@@ -9,8 +10,8 @@
       </card>
     </div>
     <div class="field is-bottom" v-if="isButton">
-      <button class="button is-info footer-left"  @click="hit">Hit</button>
-      <button class="button is-warning footer-right" @click="stand">Stand</button>
+      <button class="button is-info footer-left"  @click="hit">カードを引く</button>
+      <button class="button is-warning footer-right" @click="stand">勝負する！</button>
     </div>
   </div>
 </template>
@@ -43,12 +44,20 @@ export default {
       this.$emit('stand', this.result)
     },
     calc (hand) {
-      var points = hand.map(card => (card.value > 10 ? 10 : card.value))
-      var sum = points.reduce((bfr, aft) => bfr + aft)
-      if (sum > 21) {
-        return 'Bust (' + sum + ')'
+      /*
+       * 【問題】
+       * 計算結果を保持しているよ！
+       * このままだとバーストした場合の条件がわかりにくいね。
+       * 条件を追加してバーストした場合とそうで無い場合に分けてみよう！
+       * それに J, Q, K の値をそのまま出してしまっているよ！
+       * J, Q, K の場合は 10 で加算されるように直してみよう！
+       * できた人はAの場合の加算変化もやってみよう！
+       */
+      var sum = 0
+      for (var h in this.hand) {
+        sum += this.hand[h].value 
       }
-      return (sum <= 11 && points === 1) ? (sum + 10) : sum
+      return sum
     },
     pick () {
       return this.deck.splice(Math.floor(Math.random() * Math.floor(this.deck.length)), 1)[0]
@@ -70,12 +79,12 @@ export default {
   bottom: 0px;
 }
 .footer-left {
-  width: 30vw;
-  height: 10vh;
+  width: 20vw;
+  height: 5vh;
 }
 .footer-right {
-  width: 30vw;
-  height: 10vh;
+  width: 20vw;
+  height: 5vh;
 }
 .field {
   display: -webkit-flex;

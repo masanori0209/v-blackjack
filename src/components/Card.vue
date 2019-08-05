@@ -1,4 +1,5 @@
 <template>
+  <!-- cardの表示 -->
   <div class="card tramp" :class="{ 'is-hide': hide }">
     <img :src="require('../assets/' + suit + '.png')" v-if="!hide">
     <p class="left">{{card}}</p><p class="right">{{card}}</p>
@@ -15,10 +16,11 @@ export default {
   },
   computed: {
     card: function () {
-      if (this.number ===  1) return 'A'
-      if (this.number === 11) return 'J'
-      if (this.number === 12) return 'Q'
-      if (this.number === 13) return 'K'
+      /* 
+       * 【問題】
+       * ここでカードを 1, 11, 12, 13 と書かれた
+       * 番号を A、J, Q, K と記載を変えてみよう！
+       */
       return this.number
     }
   }

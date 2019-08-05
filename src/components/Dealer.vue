@@ -1,4 +1,5 @@
 <template>
+  <!-- 相手側コンポーネント -->
   <div class="dealer">
     <div class="field">
       <card v-for="(card, index) in hand"
@@ -33,20 +34,38 @@ export default {
   methods: {
     draw (playerBust) {
       this.hand[0].hide = false
-      while (!playerBust && this.calc(this.hand) < 17) {
+      /*
+       * 【問題】
+       * 下記ではループ処理をやっているよ！
+       * playerBustはプレーヤー側が２１を超えたかどうかのフラグを持っているよ
+       * cpuCardMaxではカードを引くのをやめる値が入っているよ
+       * 自由に値を変えてみたり、判定条件を変えてみてCPUのレベルを変化させてみよう！
+       */
+      var cpuCardMax = 17
+      // CPUのループ
+      while (playerBust == false && this.calc(this.hand) < cpuCardMax) {
         this.hand.push(this.pick())
       }
       this.$emit('result', this.calc(this.hand))
     },
     calc (hand) {
-      const points = hand.map(card => (card.value > 10 ? 10 : card.value))
-      const sum = points.reduce((ret, cur) => ret + cur)
-      if (sum > 21) {
-        return 'Bust (' + sum + ')'
+      /*
+       * 【問題】
+       * 計算結果を保持しているよ！
+       * このままだとバーストした場合の条件がわかりにくいね。
+       * 条件を追加してバーストした場合とそうで無い場合に分けてみよう！
+       * それに J, Q, K の値をそのまま出してしまっているよ！
+       * J, Q, K の場合は 10 で加算されるように直してみよう！
+       * できた人はAの場合の加算変化もやってみよう！
+       */
+      var sum = 0
+      for (var h in this.hand) {
+        sum += this.hand[h].value 
       }
-      return (sum <= 11 && points === 1) ? (sum + 10) : sum
+      return sum
     },
     pick () {
+      // デッキを一枚引く
       return this.deck.splice(Math.floor(Math.random() * Math.floor(this.deck.length)), 1)[0]
     }
   }

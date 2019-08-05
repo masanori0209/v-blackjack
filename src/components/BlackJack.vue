@@ -1,12 +1,13 @@
 <template>
+  <!-- ゲームの勝敗 / プレーヤーの配置 / リザルト画面 -->
   <div class="scene">
     <dealer ref="dealer" @now="now" @result="end" :tramp="tramp"/>
     <div class="central">
       <div class="status">
-        <p>Player：{{plResult}}</p>
+        <p>あなた：{{plResult}}</p>
       </div>
       <div class="status">
-        <p>Dealer：{{dlResult}}</p>
+        <p>相　手：{{dlResult}}</p>
       </div>
     </div>
     <player @stand="stand" @now="now" :isButton="isButton" :tramp="tramp"/>
@@ -67,10 +68,15 @@ export default {
   },
   computed: {
     result: function () {
+      /*
+       * 【問題】
+       * ここでは勝敗を判定しているよ
+       * plResultにはプレーヤーが今まで引いたカードの数が、
+       * dlResultには相手が今まで引いたカードの数が、記録されているよ！
+       * ２１に近い方が勝ちとなるように、判定条件を加えてみよう！
+       */ 
       if (this.isButton) return ''
-      if (this.plResult > this.dlResult || String(this.dlResult).indexOf('Bust') > -1) return 'あなたの勝ちです'
-      if (this.plResult < this.dlResult || String(this.plResult).indexOf('Bust') > -1) return 'あなたの負けです'
-      return '引き分けです'
+      else return 'あなたの勝ちです'
     }
   }
 }
@@ -83,7 +89,7 @@ export default {
   background-color: green;
 }
 .central {
-  margin: 10%;
+  margin: 5%;
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flex;
@@ -96,6 +102,7 @@ export default {
   height: 50px;
   padding: 15px;
   background-color: white;
+  font-weight: 700;
 }
 .result {
   position: fixed;
